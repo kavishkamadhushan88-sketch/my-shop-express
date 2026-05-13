@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="si">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Buy & Sell - Seller (Firebase)</title>
+<style>
+  :root{ --bg:#1a1c1f; --card:#24262b; --accent:#0ea5a4; --muted:#9ca3af; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter, Arial; background:var(--bg); color:#f3f4f6;}
+  header{background:linear-gradient(90deg,#0f172a,#0ea5a4); color:#fff; padding:16px 18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap;}
+  header h1{margin:0;font-size:18px;}
+  main{width:100%; margin:0; padding:16px;}
+  .formcard{background:var(--card); padding:14px;border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.6); margin-bottom:18px;}
+  label{display:block;margin-bottom:6px;font-weight:600;color:#e5e7eb;}
+  input, select, textarea, .desc{width:100%;padding:10px;border-radius:8px;border:1px solid #374151;background:#1f2125;color:#f9fafb;}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .toolbar{display:flex; gap:6px; margin-bottom:8px;}
+  .toolbar button{padding:8px;border-radius:8px;border:1px solid #374151;background:#1f2125;color:#f9fafb;cursor:pointer}
+  .desc{min-height:120px; overflow:auto;}
+  table{width:100%; border-collapse:collapse; font-size:14px;}
+  th,td{padding:10px;border-bottom:1px solid #374151;text-align:left;color:#e5e7eb;}
+  .danger{background:#7f1d1d;color:#fecaca;border:none;padding:8px;border-radius:8px;cursor:pointer}
+  .btn-primary{padding:10px 14px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer; width:100%}
+  .images-list img{width:64px;height:64px;object-fit:cover;border-radius:8px;margin:4px;}
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<header><h1>MarketHub — Seller Panel (Cloud)</h1></header>
+<main>
+  <section class="formcard">
+    <label>Product නම</label>
+    <input id="pName" type="text" />
+    <div class="row">
+      <div><label>මිල (රු)</label><input id="pPrice" type="number" /></div>
+      <div><label>කැටගරි</label><input id="pCategory" type="text" /></div>
+    </div>
+    <label>Image URL (පින්තූරයේ Link එක)</label>
+    <input id="pImg" type="text" placeholder="https://..." />
+    <label>වර්ණනා (Description)</label>
+    <div id="pDesc" class="desc" contenteditable="true"></div>
+    <br>
+    <button id="addBtn" class="btn-primary">Add Product to Cloud</button>
+  </section>
+
+  <section class="formcard">
+    <h2>සියලුම භාණ්ඩ</h2>
+    <div id="list">පූරණය වෙමින්...</div>
+  </section>
+</main>
+
+<script>
+// ඔබ ලබාදුන් Config එක
+const firebaseConfig = {
+  apiKey: "AIzaSyDM1DbXuL1wXxai1SyUt_K89JQpF0n4pFk",
+  authDomain: "myshopexpress-c5c9e.firebaseapp.com",
+  projectId: "myshopexpress-c5c9e",
+  storageBucket: "myshopexpress-c5c9e.firebasestorage.app",
+  messagingSenderId: "686789244314",
+  appId: "1:686789244314:web:241da7281573cbffd47623"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// භාණ්ඩ එකතු කිරීම
+document.getElementById('addBtn').onclick = async () => {
+  const name = document.getElementById('pName').value;
+  const price = document.getElementById('pPrice').value;
+  const img = document.getElementById('pImg').value;
+  
+  if(!name || !price) return alert("නම සහ මිල ඇතුළත් කරන්න!");
+
+  await db.collection("products").add({
+    name, price: Number(price), 
+    category: document.getElementById('pCategory').value,
+    images: [img],
+    desc: document.getElementById('pDesc').innerHTML,
+    time: Date.now()
+  });
+  alert("සාර්ථකව Cloud එකට එකතු විය!");
+  location.reload();
+};
+
+// භාණ්ඩ ලැයිස්තුව පෙන්වීම
+db.collection("products").orderBy("time", "desc").onSnapshot(snap => {
+  let html = "<table>";
+  snap.forEach(doc => {
+    const p = doc.data();
+    html += `<tr>
+      <td><b>${p.name}</b></td>
+      <td>රු ${p.price}</td>
+      <td><button class="danger" onclick="del('${doc.id}')">Delete</button></td>
+    </tr>`;
+  });
+  document.getElementById('list').innerHTML = html + "</table>";
+});
+
+async function del(id) {
+  if(confirm("මකා දමන්නද?")) await db.collection("products").doc(id).delete();
+}
+</script>
+</body>
+</html>
