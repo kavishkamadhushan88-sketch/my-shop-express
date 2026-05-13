@@ -1,164 +1,202 @@
 <!doctype html>
 <html lang="si">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MAYADHUNNA EXPRESS - Customer</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MarketHub — Seller Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
 <style>
-:root {
-  --bg: #121212;
-  --card: #1e1e1e;
-  --muted: #aaa;
-  --accent: #0ea5a4;
+:root{
+  --bg:#0d0f12;--surface:#13161a;--card:#1b1e23;--card2:#21252c;
+  --border:#2c3039;--accent:#00c9c8;--accent2:#3b82f6;
+  --danger:#f43f5e;--warn:#f59e0b;--success:#22c55e;
+  --text:#eef0f4;--muted:#64748b;--muted2:#94a3b8;
 }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-* { box-sizing: border-box; }
+header{
+  background:linear-gradient(135deg,#080a0d,#0d1b2a,#081818);
+  border-bottom:1px solid var(--border);padding:0 24px;height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#000}
+.logo-text h1{font-size:15px;font-weight:700}
+.logo-text p{font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:1px}
+.status-pill{display:flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;background:var(--card);border:1px solid var(--border);font-family:'JetBrains Mono',monospace}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.sdot.live{background:var(--success);box-shadow:0 0 6px var(--success)}
+.sdot.dead{background:var(--danger)}
 
-body {
-  margin: 0;
-  font-family: Inter, system-ui, Arial;
-  background: var(--bg);
-  color: #f5f5f5;
-}
+main{max-width:1180px;margin:0 auto;padding:24px 16px;display:grid;grid-template-columns:390px 1fr;gap:20px;align-items:start}
+@media(max-width:860px){main{grid-template-columns:1fr}}
 
-header {
-  position: sticky;
-  top: 0;
-  background: #1a1a1a;
-  padding: 18px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 100;
-  border-bottom: 1px solid #333;
-}
+/* FORM */
+.formcard{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.5);position:sticky;top:82px}
+.form-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.form-mode-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
+.form-mode-badge.add{background:rgba(0,201,200,.1);border:1px solid rgba(0,201,200,.25);color:var(--accent)}
+.form-mode-badge.edit{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.3);color:var(--accent2)}
+.form-subtitle{font-size:13px;font-weight:600;color:var(--muted2);max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.rgb-banner {
-  font-size: 1.5rem;
-  font-weight: bold;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  color: white;
-  background: linear-gradient(90deg, red, green, blue, indigo, violet);
-  background-size: 400% 400%;
-  animation: rainbow 10s linear infinite;
-  margin: 10px;
-}
-@keyframes rainbow {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
-}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+input,select,textarea{width:100%;padding:10px 13px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'Sora',sans-serif;font-size:13px;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,201,200,.1)}
+select option{background:var(--card)}
+textarea{min-height:88px;resize:vertical;line-height:1.6}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  padding: 16px;
-}
+.img-prev{width:100%;height:88px;border-radius:10px;border:1px dashed var(--border);background:var(--surface);overflow:hidden;margin-top:6px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px}
+.img-prev img{width:100%;height:100%;object-fit:cover}
 
-.card {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+.form-actions{display:flex;gap:8px;margin-top:16px}
+.btn-primary{flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;font-family:'Sora',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:opacity .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn-primary:hover{opacity:.9}
+.btn-primary:active{transform:scale(.98)}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed}
+.btn-cancel{padding:12px 16px;border-radius:12px;border:1px solid var(--border);background:none;color:var(--muted2);cursor:pointer;font-size:13px;font-family:'Sora',sans-serif;font-weight:600;transition:all .2s}
+.btn-cancel:hover{border-color:var(--muted);color:var(--text)}
 
-.imgwrap {
-  width: 100%;
-  padding-top: 100%;
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-  background: #222;
-}
-.imgwrap img {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-}
+/* PANEL */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.panel-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-head h2{font-size:14px;font-weight:700}
+.count-pill{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(0,201,200,.08);border:1px solid rgba(0,201,200,.2);color:var(--accent);font-family:'JetBrains Mono',monospace}
+.panel-search{padding:10px 16px;border-bottom:1px solid var(--border)}
+.panel-search input{padding:9px 12px;font-size:13px}
+.list-wrap{max-height:calc(100vh - 210px);overflow-y:auto}
+.list-wrap::-webkit-scrollbar{width:3px}
+.list-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
-.btn {
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
+/* PRODUCT ROW */
+.prow{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border);transition:background .15s}
+.prow:hover{background:rgba(255,255,255,.015)}
+.prow.oos{opacity:.5}
+.prow-thumb{width:50px;height:50px;border-radius:10px;flex-shrink:0;overflow:hidden;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px}
+.prow-thumb img{width:100%;height:100%;object-fit:cover}
+.prow-info{flex:1;min-width:0}
+.prow-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+.prow-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.prow-cat{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.sbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:'JetBrains Mono',monospace}
+.sbadge.in{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--success)}
+.sbadge.out{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);color:var(--danger)}
+.sbadge.low{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--warn)}
+.prow-price{font-size:13px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;white-space:nowrap}
+.prow-btns{display:flex;gap:6px;flex-shrink:0}
+.btn-edit{padding:6px 11px;border-radius:8px;border:1px solid rgba(59,130,246,.3);background:rgba(59,130,246,.08);color:var(--accent2);cursor:pointer;font-size:12px;font-weight:600;transition:background .2s}
+.btn-edit:hover{background:rgba(59,130,246,.2)}
+.btn-del{padding:6px 11px;border-radius:8px;border:1px solid rgba(244,63,94,.3);background:rgba(244,63,94,.08);color:var(--danger);cursor:pointer;font-size:12px;font-weight:600;transition:background .2s}
+.btn-del:hover{background:rgba(244,63,94,.2)}
 
-/* Modal and Cart Styles */
-.modalback {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
-}
-.modal {
-  background: #1a1a1a;
-  padding: 20px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  border: 1px solid var(--accent);
-}
+.empty-msg{padding:60px 20px;text-align:center;color:var(--muted)}
+.empty-msg .ei{font-size:44px;margin-bottom:10px}
+.empty-msg p{font-size:13px}
 
-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { padding: 8px; text-align: left; border-bottom: 1px solid #333; }
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);padding:11px 22px;border-radius:40px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{background:#14532d;border:1px solid var(--success);color:var(--success)}
+.toast.error{background:#4c0519;border:1px solid var(--danger);color:var(--danger)}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>MAYADHUNNA EXPRESS</h1>
-  <button id="openCartBtn" class="btn" style="padding: 5px 15px;">Cart (<span id="cartCount">0</span>)</button>
+  <div class="logo">
+    <div class="logo-icon">M</div>
+    <div class="logo-text"><h1>MarketHub</h1><p>Seller Panel</p></div>
+  </div>
+  <div class="status-pill">
+    <div class="sdot" id="sDot"></div>
+    <span id="sText">Connecting...</span>
+  </div>
 </header>
 
 <main>
-  <div class="rgb-banner">✨ Your Choice | Your Order ✨<br>Mayadunnana Express 🎉</div>
+  <!-- FORM -->
+  <div class="formcard" id="formCard">
+    <div class="form-header">
+      <span class="form-mode-badge add" id="modeBadge">✦ ADD MODE</span>
+      <span class="form-subtitle" id="formSub">නව භාණ්ඩය</span>
+    </div>
 
-  <div style="padding: 16px; display: flex; gap: 10px;">
-    <input id="searchInput" type="search" placeholder="Search products..." style="flex:1; padding: 10px; border-radius: 8px; background: #222; color: white; border: 1px solid #444;">
-  </div>
+    <div class="field">
+      <label>Product නම *</label>
+      <input id="pName" type="text" placeholder="eg: Samsung Galaxy S24"/>
+    </div>
 
-  <div id="productGrid" class="grid">පූරණය වෙමින්...</div>
-</main>
+    <div class="row2">
+      <div class="field">
+        <label>මිල (රු) *</label>
+        <input id="pPrice" type="number" placeholder="0" min="0"/>
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <input id="pCategory" type="text" placeholder="Electronics"/>
+      </div>
+    </div>
 
-<div id="cartModal" class="modalback">
-  <div class="modal">
-    <h2>Shopping Cart</h2>
-    <div id="cartContents"></div>
-    <div style="margin-top: 20px; display: flex; gap: 10px;">
-      <button class="btn" id="checkoutBtn">Checkout</button>
-      <button onclick="closeCart()" style="background:none; border:none; color:white; cursor:pointer;">Close</button>
+    <div class="row2">
+      <div class="field">
+        <label>Stock ප්‍රමාණය</label>
+        <input id="pStock" type="number" placeholder="0" min="0"/>
+      </div>
+      <div class="field">
+        <label>Stock Status</label>
+        <select id="pStockStatus">
+          <option value="in">In Stock ✅</option>
+          <option value="low">Low Stock ⚠️</option>
+          <option value="out">Out of Stock ❌</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Image URL</label>
+      <input id="pImg" type="url" placeholder="https://..." oninput="previewImg(this.value)"/>
+      <div class="img-prev" id="imgPrev"><span>🖼️ Preview</span></div>
+    </div>
+
+    <div class="field">
+      <label>Description</label>
+      <textarea id="pDesc" placeholder="භාණ්ඩය ගැන විස්තරය..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-primary" id="submitBtn" onclick="submitForm()">
+        <span id="submitIcon">☁️</span>
+        <span id="submitLabel">Add to Cloud</span>
+      </button>
+      <button class="btn-cancel" id="cancelBtn" onclick="resetForm()" style="display:none">✕ Cancel</button>
     </div>
   </div>
-</div>
 
-<div id="checkoutModal" class="modalback">
-  <div class="modal">
-    <h2>Order Details</h2>
-    <input type="text" id="custName" placeholder="ඔබේ නම" style="width:100%; padding:10px; margin-bottom:10px;">
-    <input type="text" id="custAddress" placeholder="ලිපිනය" style="width:100%; padding:10px; margin-bottom:10px;">
-    <input type="text" id="custPhone" placeholder="දුරකථන අංකය" style="width:100%; padding:10px; margin-bottom:10px;">
-    <button class="btn" style="width:100%;" onclick="sendOrder()">WhatsApp හරහා ඇණවුම් කරන්න</button>
-    <button onclick="closeCheckout()" style="background:none; border:none; color:white; width:100%; margin-top:10px; cursor:pointer;">Cancel</button>
+  <!-- PRODUCT LIST -->
+  <div class="panel">
+    <div class="panel-head">
+      <h2>📦 සියලුම භාණ්ඩ</h2>
+      <span class="count-pill" id="countPill">0 items</span>
+    </div>
+    <div class="panel-search">
+      <input type="search" placeholder="🔍 Search products..." oninput="filterList(this.value)"/>
+    </div>
+    <div class="list-wrap">
+      <div id="productList">
+        <div class="empty-msg"><div class="ei">⏳</div><p>Firebase load වෙමින්...</p></div>
+      </div>
+    </div>
   </div>
-</div>
+</main>
+
+<div class="toast" id="toast"></div>
 
 <script>
-// --- FIREBASE CONFIG (ඔබ ලබාදුන් දත්ත) ---
 const firebaseConfig = {
   apiKey: "AIzaSyDM1DbXuL1wXxai1SyUt_K89JQpF0n4pFk",
   authDomain: "myshopexpress-c5c9e.firebaseapp.com",
@@ -171,113 +209,181 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-let products = [];
-let cart = JSON.parse(localStorage.getItem('mh_cart_v1') || '[]');
-updateCartCount();
+let allProducts = [];
+let searchQ = '';
+let editingId = null;
 
-// Firebase එකෙන් භාණ්ඩ ලබා ගැනීම (Real-time)
-db.collection("products").onSnapshot(snap => {
-    products = [];
-    snap.forEach(doc => products.push({ id: doc.id, ...doc.data() }));
-    renderProducts(products);
+function setStatus(ok) {
+  document.getElementById('sDot').className = 'sdot ' + (ok ? 'live' : 'dead');
+  document.getElementById('sText').textContent = ok ? 'Live' : 'Offline';
+}
+
+// Real-time listener
+db.collection("products").orderBy("time","desc").onSnapshot(snap => {
+  allProducts = [];
+  snap.forEach(d => allProducts.push({ id: d.id, ...d.data() }));
+  document.getElementById('countPill').textContent = allProducts.length + ' items';
+  renderList();
+  setStatus(true);
+}, err => {
+  toast('Firebase error: ' + err.message, 'error');
+  setStatus(false);
 });
 
-function renderProducts(list) {
-    const grid = document.getElementById('productGrid');
-    if (list.length === 0) { grid.innerHTML = "භාණ්ඩ නොමැත."; return; }
-    
-    grid.innerHTML = list.map(p => `
-        <div class="card">
-            <div class="imgwrap"><img src="${p.images ? p.images[0] : ''}"></div>
-            <div style="font-weight:bold;">${p.name}</div>
-            <div style="color:var(--accent);">රු ${p.price.toLocaleString()}</div>
-            <button class="btn" onclick="addToCart('${p.id}')">Add to Cart</button>
+function renderList() {
+  const el = document.getElementById('productList');
+  const q = searchQ.toLowerCase();
+  const list = q
+    ? allProducts.filter(p => p.name.toLowerCase().includes(q) || (p.category||'').toLowerCase().includes(q))
+    : allProducts;
+
+  if (!list.length) {
+    el.innerHTML = `<div class="empty-msg"><div class="ei">${q?'🔍':'📭'}</div><p>${q?'ප්‍රතිඵල නොමැත':'දැනට භාණ්ඩ නොමැත'}</p></div>`;
+    return;
+  }
+
+  el.innerHTML = list.map(p => {
+    const ss = p.stockStatus || 'in';
+    const sc = p.stock != null ? p.stock : '—';
+    const bCls = ss === 'out' ? 'out' : ss === 'low' ? 'low' : 'in';
+    const bTxt = ss === 'out' ? 'Out of Stock' : ss === 'low' ? 'Low Stock' : 'In Stock';
+    const img = p.images && p.images[0];
+    const safeName = p.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    return `
+    <div class="prow ${ss==='out'?'oos':''}">
+      <div class="prow-thumb">
+        ${img ? `<img src="${img}" alt="" onerror="this.parentElement.innerHTML='📦'">` : '📦'}
+      </div>
+      <div class="prow-info">
+        <div class="prow-name">${p.name}</div>
+        <div class="prow-meta">
+          <span class="prow-cat">${p.category||'Uncategorized'} · ${sc}</span>
+          <span class="sbadge ${bCls}">${bTxt}</span>
         </div>
-    `).join('');
+      </div>
+      <div class="prow-price">රු ${Number(p.price).toLocaleString()}</div>
+      <div class="prow-btns">
+        <button class="btn-edit" onclick="startEdit('${p.id}')">✏️ Edit</button>
+        <button class="btn-del"  onclick="delProduct('${p.id}','${safeName}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-// Search Function
-document.getElementById('searchInput').oninput = (e) => {
-    const q = e.target.value.toLowerCase();
-    const filtered = products.filter(p => p.name.toLowerCase().includes(q));
-    renderProducts(filtered);
-};
+function filterList(q) { searchQ = q; renderList(); }
 
-// Cart Functions
-function addToCart(id) {
-    const item = cart.find(i => i.id === id);
-    if(item) item.qty++; else cart.push({id, qty: 1});
-    saveCart();
-    alert("Cart එකට එකතු කළා!");
+// SUBMIT (add or update)
+async function submitForm() {
+  const name  = document.getElementById('pName').value.trim();
+  const price = Number(document.getElementById('pPrice').value);
+  const cat   = document.getElementById('pCategory').value.trim();
+  const stockVal = document.getElementById('pStock').value;
+  const ss    = document.getElementById('pStockStatus').value;
+  const img   = document.getElementById('pImg').value.trim();
+  const desc  = document.getElementById('pDesc').value.trim();
+
+  if (!name)        { toast('Product නම ඇතුළත් කරන්න!', 'error'); return; }
+  if (!price||price<=0) { toast('වලංගු මිලක් ඇතුළත් කරන්න!', 'error'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  document.getElementById('submitLabel').textContent = editingId ? 'Saving...' : 'Adding...';
+
+  const data = {
+    name, price, category: cat,
+    stock: stockVal !== '' ? Number(stockVal) : null,
+    stockStatus: ss,
+    images: img ? [img] : [],
+    desc,
+  };
+
+  try {
+    if (editingId) {
+      await db.collection("products").doc(editingId).update(data);
+      toast('✅ ' + name + ' Update කළා!', 'success');
+    } else {
+      data.time = Date.now();
+      await db.collection("products").add(data);
+      toast('✅ ' + name + ' Add කළා!', 'success');
+    }
+    resetForm();
+  } catch(e) {
+    toast('Error: ' + e.message, 'error');
+    btn.disabled = false;
+    document.getElementById('submitLabel').textContent = editingId ? 'Save Changes' : 'Add to Cloud';
+  }
 }
 
-function saveCart() {
-    localStorage.setItem('mh_cart_v1', JSON.stringify(cart));
-    updateCartCount();
+// EDIT — load product into form
+function startEdit(id) {
+  const p = allProducts.find(x => x.id === id);
+  if (!p) return;
+  editingId = id;
+
+  document.getElementById('pName').value     = p.name || '';
+  document.getElementById('pPrice').value    = p.price || '';
+  document.getElementById('pCategory').value = p.category || '';
+  document.getElementById('pStock').value    = p.stock != null ? p.stock : '';
+  document.getElementById('pStockStatus').value = p.stockStatus || 'in';
+  document.getElementById('pImg').value      = (p.images && p.images[0]) || '';
+  document.getElementById('pDesc').value     = p.desc || '';
+  previewImg((p.images && p.images[0]) || '');
+
+  // Switch badge & button to EDIT mode
+  const badge = document.getElementById('modeBadge');
+  badge.textContent  = '✎ EDIT MODE';
+  badge.className    = 'form-mode-badge edit';
+  document.getElementById('formSub').textContent        = p.name;
+  document.getElementById('submitIcon').textContent     = '💾';
+  document.getElementById('submitLabel').textContent    = 'Save Changes';
+  document.getElementById('cancelBtn').style.display   = 'block';
+  document.getElementById('submitBtn').disabled = false;
+
+  document.getElementById('formCard').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-function updateCartCount() {
-    const count = cart.reduce((s, i) => s + i.qty, 0);
-    document.getElementById('cartCount').textContent = count;
+// RESET to add mode
+function resetForm() {
+  editingId = null;
+  ['pName','pPrice','pCategory','pStock','pImg','pDesc'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('pStockStatus').value = 'in';
+  document.getElementById('imgPrev').innerHTML  = '<span>🖼️ Preview</span>';
+
+  const badge = document.getElementById('modeBadge');
+  badge.textContent  = '✦ ADD MODE';
+  badge.className    = 'form-mode-badge add';
+  document.getElementById('formSub').textContent      = 'නව භාණ්ඩය';
+  document.getElementById('submitIcon').textContent   = '☁️';
+  document.getElementById('submitLabel').textContent  = 'Add to Cloud';
+  document.getElementById('cancelBtn').style.display  = 'none';
+  document.getElementById('submitBtn').disabled = false;
 }
 
-// Open/Close Cart
-document.getElementById('openCartBtn').onclick = () => {
-    const modal = document.getElementById('cartModal');
-    const contents = document.getElementById('cartContents');
-    
-    if(cart.length === 0) { alert("Cart එක හිස්!"); return; }
-    
-    let html = `<table><tr><th>Item</th><th>Qty</th><th>Price</th></tr>`;
-    let total = 0;
-    cart.forEach(c => {
-        const p = products.find(x => x.id === c.id);
-        if(p) {
-            html += `<tr><td>${p.name}</td><td>${c.qty}</td><td>රු ${(p.price * c.qty).toLocaleString()}</td></tr>`;
-            total += (p.price * c.qty);
-        }
-    });
-    html += `<tr><td colspan="2"><b>Total</b></td><td><b>රු ${total.toLocaleString()}</b></td></tr></table>`;
-    contents.innerHTML = html;
-    modal.style.display = 'flex';
-};
+// DELETE
+async function delProduct(id, name) {
+  if (!confirm(`"${name}" delete කරන්නද?`)) return;
+  if (editingId === id) resetForm();
+  try {
+    await db.collection("products").doc(id).delete();
+    toast('🗑️ ' + name + ' Delete කළා!', 'success');
+  } catch(e) { toast('Error: ' + e.message, 'error'); }
+}
 
-function closeCart() { document.getElementById('cartModal').style.display = 'none'; }
+// IMAGE PREVIEW
+function previewImg(url) {
+  const p = document.getElementById('imgPrev');
+  if (!url) { p.innerHTML = '<span>🖼️ Preview</span>'; return; }
+  p.innerHTML = `<img src="${url}" onerror="this.parentElement.innerHTML='<span>❌ Invalid URL</span>'"/>`;
+}
 
-// Checkout and WhatsApp Order
-document.getElementById('checkoutBtn').onclick = () => {
-    closeCart();
-    document.getElementById('checkoutModal').style.display = 'flex';
-};
-
-function closeCheckout() { document.getElementById('checkoutModal').style.display = 'none'; }
-
-function sendOrder() {
-    const name = document.getElementById('custName').value;
-    const address = document.getElementById('custAddress').value;
-    const phone = document.getElementById('custPhone').value;
-
-    if(!name || !address || !phone) { alert("කරුණාකර විස්තර ඇතුළත් කරන්න!"); return; }
-
-    let cartText = "";
-    let grandTotal = 0;
-    cart.forEach(it => {
-        const p = products.find(x => x.id === it.id);
-        if(p) {
-            cartText += `• ${p.name} (${it.qty} x රු ${p.price.toLocaleString()})%0A`;
-            grandTotal += (p.price * it.qty);
-        }
-    });
-
-    const msg = `🛒 *MAYADHUNNA EXPRESS - NEW ORDER*%0A%0A👤 *නම:* ${name}%0A🏠 *ලිපිනය:* ${address}%0A📞 *දුරකථන:* ${phone}%0A%0A📦 *අයිතම:*%0A${cartText}%0A💰 *මුළු මුදල:* රු ${grandTotal.toLocaleString()}`;
-    const sellerNumber = "94755104531"; 
-    
-    window.open(`https://wa.me/${sellerNumber}?text=${msg}`, "_blank");
-    
-    cart = [];
-    saveCart();
-    closeCheckout();
-    alert("Order එක සාර්ථකව යොමු කළා!");
+// TOAST
+let _tt;
+function toast(msg, type='success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast ' + type + ' show';
+  clearTimeout(_tt);
+  _tt = setTimeout(() => el.className = 'toast', 3200);
 }
 </script>
 </body>
