@@ -189,6 +189,108 @@ textarea{min-height:88px;resize:vertical;line-height:1.6}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.success{background:#14532d;border:1px solid var(--success);color:var(--success)}
 .toast.error{background:#4c0519;border:1px solid var(--danger);color:var(--danger)}
+
+/* ── SETTINGS BUTTON ── */
+.btn-settings{
+  width:38px;height:38px;border-radius:10px;border:1px solid var(--border);
+  background:var(--card);color:var(--muted2);cursor:pointer;
+  font-size:18px;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
+}
+.btn-settings:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,201,200,.08)}
+
+/* ── SETTINGS OVERLAY ── */
+.settings-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.settings-overlay.open{opacity:1;pointer-events:all}
+
+/* ── SETTINGS PANEL ── */
+.settings-panel{
+  position:fixed;top:0;right:0;height:100vh;width:340px;max-width:94vw;
+  background:var(--card);border-left:1px solid var(--border);
+  z-index:201;display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  box-shadow:-12px 0 40px rgba(0,0,0,.6);
+}
+.settings-panel.open{transform:translateX(0)}
+
+.sp-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.sp-head h2{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sp-close{
+  width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:none;color:var(--muted2);cursor:pointer;font-size:18px;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.sp-close:hover{border-color:var(--danger);color:var(--danger)}
+
+.sp-body{flex:1;overflow-y:auto;padding:20px}
+.sp-body::-webkit-scrollbar{width:3px}
+.sp-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+.sp-section-label{
+  font-size:11px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;
+}
+
+/* Add category row */
+.cat-add-row{display:flex;gap:7px;margin-bottom:16px}
+.cat-add-row input{flex:1;padding:9px 12px;font-size:13px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'Sora',sans-serif;outline:none;transition:border-color .2s}
+.cat-add-row input:focus{border-color:var(--accent)}
+.btn-cat-add{
+  padding:9px 14px;border-radius:10px;border:none;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#000;font-weight:800;font-size:13px;cursor:pointer;
+  font-family:'Sora',sans-serif;white-space:nowrap;transition:opacity .2s;
+}
+.btn-cat-add:hover{opacity:.85}
+
+/* Category list */
+.cat-list{display:flex;flex-direction:column;gap:7px}
+.cat-item{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:9px 11px;
+  transition:border-color .2s;
+}
+.cat-item:hover{border-color:rgba(0,201,200,.25)}
+.cat-item-name{
+  flex:1;min-width:0;font-size:13px;font-weight:600;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.cat-item-name-input{
+  flex:1;min-width:0;font-size:13px;font-weight:600;
+  padding:2px 6px;border-radius:6px;border:1px solid var(--accent);
+  background:var(--card);color:var(--text);font-family:'Sora',sans-serif;outline:none;
+}
+.cat-item-btns{display:flex;gap:5px;flex-shrink:0}
+.btn-cat-rename,.btn-cat-save,.btn-cat-del{
+  width:28px;height:28px;border-radius:7px;border:1px solid var(--border);
+  background:none;cursor:pointer;font-size:14px;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.btn-cat-rename{color:var(--accent2);border-color:rgba(59,130,246,.3)}
+.btn-cat-rename:hover{background:rgba(59,130,246,.12)}
+.btn-cat-save{color:var(--success);border-color:rgba(34,197,94,.3)}
+.btn-cat-save:hover{background:rgba(34,197,94,.12)}
+.btn-cat-del{color:var(--danger);border-color:rgba(244,63,94,.3)}
+.btn-cat-del:hover{background:rgba(244,63,94,.12)}
+
+.cat-empty{
+  text-align:center;padding:32px 16px;color:var(--muted);font-size:13px;
+}
+.cat-empty .ce-icon{font-size:32px;margin-bottom:8px}
+
+/* count badge in sp-head */
+.sp-cat-count{
+  font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;
+  background:rgba(0,201,200,.08);border:1px solid rgba(0,201,200,.2);
+  color:var(--accent);font-family:'JetBrains Mono',monospace;
+}
 </style>
 </head>
 <body>
@@ -198,11 +300,35 @@ textarea{min-height:88px;resize:vertical;line-height:1.6}
     <div class="logo-icon">M</div>
     <div class="logo-text"><h1>MarketHub</h1><p>Seller Panel</p></div>
   </div>
-  <div class="status-pill">
-    <div class="sdot" id="sDot"></div>
-    <span id="sText">Connecting...</span>
+  <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+    <div class="status-pill">
+      <div class="sdot" id="sDot"></div>
+      <span id="sText">Connecting...</span>
+    </div>
+    <button class="btn-settings" onclick="toggleSettings()" title="Settings">⚙️</button>
   </div>
 </header>
+
+<!-- SETTINGS OVERLAY -->
+<div class="settings-overlay" id="settingsOverlay" onclick="closeSettings()"></div>
+
+<!-- SETTINGS PANEL -->
+<div class="settings-panel" id="settingsPanel">
+  <div class="sp-head">
+    <h2>⚙️ Settings <span class="sp-cat-count" id="catCount">0</span></h2>
+    <button class="sp-close" onclick="closeSettings()">✕</button>
+  </div>
+  <div class="sp-body">
+    <div class="sp-section-label">📂 Categories කළමනාකරණය</div>
+    <div class="cat-add-row">
+      <input type="text" id="newCatInput" placeholder="Category නම..." onkeydown="if(event.key==='Enter')addCategory()"/>
+      <button class="btn-cat-add" onclick="addCategory()">＋ Add</button>
+    </div>
+    <div class="cat-list" id="catList">
+      <div class="cat-empty"><div class="ce-icon">📂</div><p>Categories නොමැත</p></div>
+    </div>
+  </div>
+</div>
 
 <main>
   <!-- FORM -->
@@ -224,7 +350,9 @@ textarea{min-height:88px;resize:vertical;line-height:1.6}
       </div>
       <div class="field">
         <label>Category</label>
-        <input id="pCategory" type="text" placeholder="Electronics"/>
+        <select id="pCategory">
+          <option value="">-- Category select කරන්න --</option>
+        </select>
       </div>
     </div>
 
@@ -698,7 +826,15 @@ function startEdit(id) {
 
   document.getElementById('pName').value     = p.name || '';
   document.getElementById('pPrice').value    = p.price || '';
-  document.getElementById('pCategory').value = p.category || '';
+  // Set category — add temp option if not in list
+  const catSel = document.getElementById('pCategory');
+  const catVal = p.category || '';
+  if (catVal && !categories.includes(catVal)) {
+    const opt = document.createElement('option');
+    opt.value = catVal; opt.textContent = catVal + ' (saved)';
+    catSel.appendChild(opt);
+  }
+  catSel.value = catVal;
   document.getElementById('pStock').value    = p.stock != null ? p.stock : '';
   document.getElementById('pStockStatus').value = p.stockStatus || 'in';
   document.getElementById('pDesc').value     = p.desc || '';
@@ -735,7 +871,9 @@ function startEdit(id) {
 // ── RESET ──
 function resetForm() {
   editingId = null;
-  ['pName','pPrice','pCategory','pStock','pDesc'].forEach(id => document.getElementById(id).value = '');
+  ['pName','pPrice','pStock','pDesc'].forEach(id => document.getElementById(id).value = '');
+  populateCategorySelect(); // refresh and reset select
+  document.getElementById('pCategory').value = '';
   document.getElementById('pStockStatus').value = 'in';
 
   imageEntries = [];
@@ -776,6 +914,143 @@ function toast(msg, type='success') {
   el.className = 'toast ' + type + ' show';
   clearTimeout(_tt);
   _tt = setTimeout(() => el.className = 'toast', 3200);
+}
+
+// ── SETTINGS PANEL ──
+function toggleSettings() {
+  const panel = document.getElementById('settingsPanel');
+  const overlay = document.getElementById('settingsOverlay');
+  if (panel.classList.contains('open')) {
+    closeSettings();
+  } else {
+    panel.classList.add('open');
+    overlay.classList.add('open');
+  }
+}
+function closeSettings() {
+  document.getElementById('settingsPanel').classList.remove('open');
+  document.getElementById('settingsOverlay').classList.remove('open');
+}
+
+// ── CATEGORIES (Firestore) ──
+let categories = []; // string[]
+
+// Real-time listener for categories
+db.collection("settings").doc("categories").onSnapshot(snap => {
+  if (snap.exists) {
+    categories = snap.data().list || [];
+  } else {
+    categories = [];
+  }
+  renderCategoryList();
+  populateCategorySelect();
+}, () => {
+  categories = [];
+  renderCategoryList();
+  populateCategorySelect();
+});
+
+async function saveCategoriesToFirestore() {
+  await db.collection("settings").doc("categories").set({ list: categories });
+}
+
+async function addCategory() {
+  const input = document.getElementById('newCatInput');
+  const name = input.value.trim();
+  if (!name) { toast('Category නම ඇතුළත් කරන්න!', 'error'); return; }
+  if (categories.find(c => c.toLowerCase() === name.toLowerCase())) {
+    toast('මේ Category දැනටමත් ඇත!', 'error'); return;
+  }
+  categories.push(name);
+  input.value = '';
+  try {
+    await saveCategoriesToFirestore();
+    toast('✅ "' + name + '" Category add කළා!', 'success');
+  } catch(e) {
+    categories.pop();
+    toast('Error: ' + e.message, 'error');
+  }
+}
+
+async function deleteCategory(idx) {
+  const name = categories[idx];
+  if (!confirm('"' + name + '" category delete කරන්නද?')) return;
+  const removed = categories.splice(idx, 1);
+  try {
+    await saveCategoriesToFirestore();
+    toast('🗑️ "' + name + '" Delete කළා!', 'success');
+  } catch(e) {
+    categories.splice(idx, 0, removed[0]);
+    toast('Error: ' + e.message, 'error');
+  }
+}
+
+function startRenameCategory(idx) {
+  const item = document.getElementById('catItem_' + idx);
+  if (!item) return;
+  const nameEl = item.querySelector('.cat-item-name');
+  const curName = categories[idx];
+  nameEl.outerHTML = `<input class="cat-item-name-input" id="catRename_${idx}" value="${curName}" onkeydown="if(event.key==='Enter')saveRenameCategory(${idx});if(event.key==='Escape')renderCategoryList()"/>`;
+  const renameBtn = item.querySelector('.btn-cat-rename');
+  renameBtn.outerHTML = `<button class="btn-cat-save" onclick="saveRenameCategory(${idx})" title="Save">✓</button>`;
+  document.getElementById('catRename_' + idx).focus();
+}
+
+async function saveRenameCategory(idx) {
+  const input = document.getElementById('catRename_' + idx);
+  if (!input) return;
+  const newName = input.value.trim();
+  if (!newName) { toast('Category නම ඇතුළත් කරන්න!', 'error'); return; }
+  if (categories.find((c, i) => i !== idx && c.toLowerCase() === newName.toLowerCase())) {
+    toast('මේ නම දැනටමත් ඇත!', 'error'); return;
+  }
+  const oldName = categories[idx];
+  categories[idx] = newName;
+  try {
+    await saveCategoriesToFirestore();
+    toast('✅ "' + oldName + '" → "' + newName + '" Rename කළා!', 'success');
+  } catch(e) {
+    categories[idx] = oldName;
+    toast('Error: ' + e.message, 'error');
+    renderCategoryList();
+  }
+}
+
+function renderCategoryList() {
+  const list = document.getElementById('catList');
+  const count = document.getElementById('catCount');
+  if (!list) return;
+  count.textContent = categories.length;
+
+  if (!categories.length) {
+    list.innerHTML = '<div class="cat-empty"><div class="ce-icon">📂</div><p>Categories නොමැත<br/><span style="font-size:11px;color:var(--muted)">ඉහළ input box එකෙන් add කරන්න</span></p></div>';
+    return;
+  }
+
+  list.innerHTML = categories.map((name, idx) => `
+    <div class="cat-item" id="catItem_${idx}">
+      <span class="cat-item-name">${name}</span>
+      <div class="cat-item-btns">
+        <button class="btn-cat-rename" onclick="startRenameCategory(${idx})" title="Rename">✎</button>
+        <button class="btn-cat-del" onclick="deleteCategory(${idx})" title="Delete">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function populateCategorySelect() {
+  const sel = document.getElementById('pCategory');
+  if (!sel) return;
+  const current = sel.value;
+  sel.innerHTML = '<option value="">-- Category select කරන්න --</option>';
+  categories.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    sel.appendChild(opt);
+  });
+  // Restore selection if still valid
+  if (current && categories.includes(current)) sel.value = current;
 }
 
 // ── INIT ──
