@@ -19,24 +19,26 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);min-he
 
 header{
   background:linear-gradient(135deg,#080a0d,#0d1b2a,#081818);
-  border-bottom:1px solid var(--border);padding:0 24px;height:62px;
+  border-bottom:1px solid var(--border);padding:0 16px;height:62px;
   display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100;
+  position:sticky;top:0;z-index:100;gap:10px;
 }
-.logo{display:flex;align-items:center;gap:12px}
-.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#000}
-.logo-text h1{font-size:15px;font-weight:700}
-.logo-text p{font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:1px}
-.status-pill{display:flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;background:var(--card);border:1px solid var(--border);font-family:'JetBrains Mono',monospace}
+.logo{display:flex;align-items:center;gap:10px;min-width:0}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#000;flex-shrink:0}
+.logo-text h1{font-size:15px;font-weight:700;white-space:nowrap}
+.logo-text p{font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:1px;white-space:nowrap}
+@media(max-width:400px){.logo-text p{display:none}}
+.status-pill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--card);border:1px solid var(--border);font-family:'JetBrains Mono',monospace;flex-shrink:0;white-space:nowrap}
 .sdot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
 .sdot.live{background:var(--success);box-shadow:0 0 6px var(--success)}
 .sdot.dead{background:var(--danger)}
 
-main{max-width:1180px;margin:0 auto;padding:24px 16px;display:grid;grid-template-columns:390px 1fr;gap:20px;align-items:start}
-@media(max-width:860px){main{grid-template-columns:1fr}}
+main{max-width:1180px;margin:0 auto;padding:24px 16px;display:grid;grid-template-columns:400px 1fr;gap:20px;align-items:start}
+@media(max-width:880px){main{grid-template-columns:1fr;padding:16px 12px;gap:16px}}
 
 /* FORM */
 .formcard{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 40px rgba(0,0,0,.5);position:sticky;top:82px}
+@media(max-width:880px){.formcard{position:static;padding:18px 16px}}
 .form-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .form-mode-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
 .form-mode-badge.add{background:rgba(0,201,200,.1);border:1px solid rgba(0,201,200,.25);color:var(--accent)}
@@ -51,8 +53,84 @@ select option{background:var(--card)}
 textarea{min-height:88px;resize:vertical;line-height:1.6}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-.img-prev{width:100%;height:88px;border-radius:10px;border:1px dashed var(--border);background:var(--surface);overflow:hidden;margin-top:6px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px}
-.img-prev img{width:100%;height:100%;object-fit:cover}
+/* ── MULTI-IMAGE SECTION ── */
+.img-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.img-section-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.img-btn-group{display:flex;gap:6px}
+.btn-add-img{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:8px;border:1px solid rgba(0,201,200,.3);background:rgba(0,201,200,.07);color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;transition:all .2s}
+.btn-add-img:hover{background:rgba(0,201,200,.15)}
+.btn-upload-file{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:8px;border:1px solid rgba(139,92,246,.35);background:rgba(139,92,246,.08);color:#a78bfa;font-size:12px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;transition:all .2s}
+.btn-upload-file:hover{background:rgba(139,92,246,.18)}
+
+/* drop zone */
+.drop-zone{
+  border:2px dashed rgba(139,92,246,.35);border-radius:12px;
+  background:rgba(139,92,246,.04);
+  padding:18px 12px;text-align:center;cursor:pointer;
+  transition:border-color .2s,background .2s;margin-bottom:8px;
+  display:none;
+}
+.drop-zone.visible{display:block}
+.drop-zone.drag-over{border-color:#a78bfa;background:rgba(139,92,246,.12)}
+.drop-zone-inner{pointer-events:none}
+.drop-zone-icon{font-size:26px;margin-bottom:4px}
+.drop-zone-txt{font-size:12px;color:var(--muted2);line-height:1.5}
+.drop-zone-txt strong{color:#a78bfa}
+
+/* processing overlay */
+.img-processing{
+  display:none;align-items:center;gap:8px;padding:8px 12px;
+  border-radius:8px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);
+  font-size:12px;color:#a78bfa;margin-bottom:6px;
+}
+.img-processing.show{display:flex}
+.spin{display:inline-block;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.img-list{display:flex;flex-direction:column;gap:8px;margin-bottom:6px}
+.img-entry{display:flex;gap:8px;align-items:center}
+.img-entry-url input{flex:1;padding:8px 11px;font-size:12px}
+.img-entry-file{flex:1;min-width:0}
+.img-file-info{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:7px 11px}
+.img-file-name{font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.img-file-size{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;white-space:nowrap;flex-shrink:0}
+.img-file-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);color:#a78bfa;font-family:'JetBrains Mono',monospace;white-space:nowrap;flex-shrink:0}
+
+.img-thumb{width:42px;height:42px;border-radius:8px;background:var(--surface);border:1px solid var(--border);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}
+.img-thumb img{width:100%;height:100%;object-fit:cover}
+.btn-rm-img{width:30px;height:30px;border-radius:7px;border:1px solid rgba(244,63,94,.3);background:rgba(244,63,94,.07);color:var(--danger);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
+.btn-rm-img:hover{background:rgba(244,63,94,.18)}
+
+/* strip + size meter */
+.img-strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.img-strip-thumb{width:52px;height:52px;border-radius:8px;border:1px solid var(--border);background:var(--surface);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:border-color .2s;position:relative}
+.img-strip-thumb:hover{border-color:var(--accent)}
+.img-strip-thumb img{width:100%;height:100%;object-fit:cover}
+.img-strip-thumb .file-tag{position:absolute;bottom:2px;right:2px;width:14px;height:14px;border-radius:4px;background:rgba(139,92,246,.8);display:flex;align-items:center;justify-content:center;font-size:8px}
+
+.img-footer{display:flex;align-items:center;justify-content:space-between;margin-top:6px;flex-wrap:wrap;gap:4px}
+.img-count-badge{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.img-size-meter{display:flex;align-items:center;gap:6px}
+.size-bar-wrap{width:70px;height:5px;border-radius:3px;background:var(--border);overflow:hidden}
+.size-bar{height:100%;border-radius:3px;background:var(--success);transition:width .3s,background .3s}
+.size-label{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted)}
+
+/* ── COLORS SECTION ── */
+.color-section{margin-bottom:13px}
+.color-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.color-optional-tag{font-size:10px;font-weight:600;color:var(--muted);font-family:'JetBrains Mono',monospace;background:rgba(100,116,139,.1);border:1px solid rgba(100,116,139,.2);padding:2px 8px;border-radius:20px}
+.color-add-row{display:flex;gap:8px;align-items:center}
+.color-add-row input[type="text"]{flex:1;padding:8px 11px;font-size:12px}
+.color-swatch-input{width:40px;height:38px;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;padding:2px;flex-shrink:0}
+.btn-add-color{padding:8px 14px;border-radius:8px;border:1px solid rgba(59,130,246,.3);background:rgba(59,130,246,.08);color:var(--accent2);font-size:12px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;white-space:nowrap;transition:background .2s}
+.btn-add-color:hover{background:rgba(59,130,246,.18)}
+
+.color-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.color-chip{display:flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600}
+.chip-dot{width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,255,255,.15);flex-shrink:0}
+.chip-name{color:var(--text)}
+.chip-rm{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0;line-height:1;transition:color .2s}
+.chip-rm:hover{color:var(--danger)}
 
 .form-actions{display:flex;gap:8px;margin-top:16px}
 .btn-primary{flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;font-family:'Sora',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:opacity .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:7px}
@@ -69,30 +147,38 @@ textarea{min-height:88px;resize:vertical;line-height:1.6}
 .count-pill{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;background:rgba(0,201,200,.08);border:1px solid rgba(0,201,200,.2);color:var(--accent);font-family:'JetBrains Mono',monospace}
 .panel-search{padding:10px 16px;border-bottom:1px solid var(--border)}
 .panel-search input{padding:9px 12px;font-size:13px}
-.list-wrap{max-height:calc(100vh - 210px);overflow-y:auto}
+.list-wrap{max-height:calc(100vh - 200px);overflow-y:auto}
+@media(max-width:880px){.list-wrap{max-height:60vh}}
 .list-wrap::-webkit-scrollbar{width:3px}
 .list-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
 /* PRODUCT ROW */
-.prow{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--border);transition:background .15s}
+.prow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);transition:background .15s}
 .prow:hover{background:rgba(255,255,255,.015)}
 .prow.oos{opacity:.5}
-.prow-thumb{width:50px;height:50px;border-radius:10px;flex-shrink:0;overflow:hidden;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px}
+.prow-thumb{width:48px;height:48px;border-radius:10px;flex-shrink:0;overflow:hidden;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px}
 .prow-thumb img{width:100%;height:100%;object-fit:cover}
 .prow-info{flex:1;min-width:0}
 .prow-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
-.prow-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.prow-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .prow-cat{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
 .sbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:'JetBrains Mono',monospace}
 .sbadge.in{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--success)}
 .sbadge.out{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.25);color:var(--danger)}
 .sbadge.low{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:var(--warn)}
+.prow-colors{display:flex;gap:4px;flex-shrink:0}
+.prow-colordot{width:12px;height:12px;border-radius:50%;border:1px solid rgba(255,255,255,.15)}
 .prow-price{font-size:13px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace;white-space:nowrap}
 .prow-btns{display:flex;gap:6px;flex-shrink:0}
 .btn-edit{padding:6px 11px;border-radius:8px;border:1px solid rgba(59,130,246,.3);background:rgba(59,130,246,.08);color:var(--accent2);cursor:pointer;font-size:12px;font-weight:600;transition:background .2s}
 .btn-edit:hover{background:rgba(59,130,246,.2)}
 .btn-del{padding:6px 11px;border-radius:8px;border:1px solid rgba(244,63,94,.3);background:rgba(244,63,94,.08);color:var(--danger);cursor:pointer;font-size:12px;font-weight:600;transition:background .2s}
 .btn-del:hover{background:rgba(244,63,94,.2)}
+@media(max-width:400px){
+  .prow-price{display:none}
+  .prow-colors{display:none}
+  .btn-edit,.btn-del{padding:6px 8px;font-size:11px}
+}
 
 .empty-msg{padding:60px 20px;text-align:center;color:var(--muted)}
 .empty-msg .ei{font-size:44px;margin-bottom:10px}
@@ -157,10 +243,61 @@ textarea{min-height:88px;resize:vertical;line-height:1.6}
       </div>
     </div>
 
+    <!-- MULTI-IMAGE SECTION -->
     <div class="field">
-      <label>Image URL</label>
-      <input id="pImg" type="url" placeholder="https://..." oninput="previewImg(this.value)"/>
-      <div class="img-prev" id="imgPrev"><span>🖼️ Preview</span></div>
+      <div class="img-section-header">
+        <span class="img-section-label">📷 Product Images</span>
+        <div class="img-btn-group">
+          <button class="btn-upload-file" onclick="document.getElementById('fileInput').click()">📁 File Upload</button>
+          <button class="btn-add-img" onclick="addImageField()">🔗 URL Add</button>
+        </div>
+      </div>
+
+      <!-- hidden file input — multiple, images only -->
+      <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)"/>
+
+      <!-- drag & drop zone -->
+      <div class="drop-zone visible" id="dropZone"
+           onclick="document.getElementById('fileInput').click()"
+           ondragover="dzDragOver(event)" ondragleave="dzDragLeave()" ondrop="dzDrop(event)">
+        <div class="drop-zone-inner">
+          <div class="drop-zone-icon">🖼️</div>
+          <div class="drop-zone-txt">
+            <strong>Images drag & drop කරන්න</strong> හෝ click කරන්න<br/>
+            <span style="font-size:11px;color:var(--muted)">JPG · PNG · WEBP — auto compress වෙනවා</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- processing indicator -->
+      <div class="img-processing" id="imgProcessing">
+        <span class="spin">⚙️</span>
+        <span id="imgProcessText">Images compress කරමින්...</span>
+      </div>
+
+      <div class="img-list" id="imgList"></div>
+      <div class="img-strip" id="imgStrip"></div>
+      <div class="img-footer">
+        <div class="img-count-badge" id="imgCountBadge"></div>
+        <div class="img-size-meter" id="imgSizeMeter" style="display:none">
+          <div class="size-bar-wrap"><div class="size-bar" id="sizeBar"></div></div>
+          <span class="size-label" id="sizeLabel"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLORS SECTION -->
+    <div class="color-section">
+      <div class="color-section-header">
+        <span class="img-section-label" style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">🎨 Colors</span>
+        <span class="color-optional-tag">Optional</span>
+      </div>
+      <div class="color-add-row">
+        <input type="color" class="color-swatch-input" id="colorPicker" value="#00c9c8"/>
+        <input type="text" id="colorName" placeholder="Color නම (eg: Red, Blue...)" style="flex:1;padding:8px 11px;font-size:12px"/>
+        <button class="btn-add-color" onclick="addColor()">＋ Add</button>
+      </div>
+      <div class="color-chips" id="colorChips"></div>
     </div>
 
     <div class="field">
@@ -213,12 +350,239 @@ let allProducts = [];
 let searchQ = '';
 let editingId = null;
 
+// ── IMAGE MANAGEMENT ──
+// entry: { id, url, isFile, filename, sizeKB }
+let imageEntries = [];
+let imgIdCounter = 0;
+
+const MAX_TOTAL_KB = 700;   // safe Firestore limit
+const COMPRESS_MAX_PX = 900; // max dimension after resize
+const COMPRESS_QUALITY = 0.82;
+
+/* ─ Drag & Drop ─ */
+function dzDragOver(e){ e.preventDefault(); document.getElementById('dropZone').classList.add('drag-over'); }
+function dzDragLeave(){ document.getElementById('dropZone').classList.remove('drag-over'); }
+function dzDrop(e){
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('drag-over');
+  if(e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
+}
+
+/* ─ File handler ─ */
+async function handleFiles(files){
+  if(!files || !files.length) return;
+  const arr = Array.from(files).filter(f => f.type.startsWith('image/'));
+  if(!arr.length){ toast('Image files පමණක් select කරන්න!','error'); return; }
+
+  // show processing
+  const proc = document.getElementById('imgProcessing');
+  const procTxt = document.getElementById('imgProcessText');
+  proc.classList.add('show');
+  procTxt.textContent = `${arr.length} image${arr.length>1?'s':''} compress කරමින්...`;
+
+  // hide drop zone while processing
+  document.getElementById('dropZone').classList.remove('visible');
+
+  for(let i=0; i<arr.length; i++){
+    const file = arr[i];
+    procTxt.textContent = `${i+1}/${arr.length} — ${file.name}`;
+    try {
+      const { dataUrl, sizeKB } = await compressImage(file);
+      const id = 'img_' + (++imgIdCounter);
+      imageEntries.push({ id, url: dataUrl, isFile: true, filename: file.name, sizeKB });
+      renderImageList();
+      updateSizeMeter();
+    } catch(err){
+      toast('⚠️ ' + file.name + ' compress error', 'error');
+    }
+  }
+
+  proc.classList.remove('show');
+  document.getElementById('dropZone').classList.add('visible');
+  document.getElementById('fileInput').value = ''; // reset so same file can be re-selected
+}
+
+/* ─ Canvas compress ─ */
+function compressImage(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = ev => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        let { width, height } = img;
+        // Resize to fit within COMPRESS_MAX_PX
+        if(width > COMPRESS_MAX_PX || height > COMPRESS_MAX_PX){
+          const ratio = Math.min(COMPRESS_MAX_PX / width, COMPRESS_MAX_PX / height);
+          width  = Math.round(width  * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL('image/jpeg', COMPRESS_QUALITY);
+        const sizeKB = Math.round((dataUrl.length * 3) / 4 / 1024);
+        resolve({ dataUrl, sizeKB });
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ─ URL entry ─ */
+function addImageField(url = ''){
+  const id = 'img_' + (++imgIdCounter);
+  imageEntries.push({ id, url, isFile: false, filename: '', sizeKB: 0 });
+  renderImageList();
+}
+
+function removeImageEntry(id){
+  imageEntries = imageEntries.filter(e => e.id !== id);
+  renderImageList();
+  updateSizeMeter();
+}
+
+function updateImageUrl(id, val){
+  const entry = imageEntries.find(e => e.id === id);
+  if(entry){ entry.url = val.trim(); entry.sizeKB = 0; }
+  renderImageStrip();
+  updateImgCountBadge();
+  updateSizeMeter();
+}
+
+/* ─ Render list ─ */
+function renderImageList(){
+  const list = document.getElementById('imgList');
+  list.innerHTML = imageEntries.map(entry => {
+    const thumbHtml = entry.url
+      ? `<img src="${entry.isFile ? entry.url : entry.url}" onerror="this.parentElement.innerHTML='🖼️'" alt=""/>`
+      : '🖼️';
+
+    const innerContent = entry.isFile
+      ? `<div class="img-entry-file">
+           <div class="img-file-info">
+             <span class="img-file-name" title="${entry.filename}">${entry.filename}</span>
+             <span class="img-file-size">${entry.sizeKB}KB</span>
+             <span class="img-file-badge">📁 File</span>
+           </div>
+         </div>`
+      : `<div class="img-entry-url" style="flex:1;display:flex">
+           <input type="url" placeholder="https://... image URL" value="${entry.url}"
+             onchange="updateImageUrl('${entry.id}',this.value)"
+             oninput="liveThumb('${entry.id}',this.value)" style="flex:1;padding:8px 11px;font-size:12px"/>
+         </div>`;
+
+    return `
+    <div class="img-entry" id="entry_${entry.id}">
+      <div class="img-thumb" id="thumb_${entry.id}">${thumbHtml}</div>
+      ${innerContent}
+      <button class="btn-rm-img" onclick="removeImageEntry('${entry.id}')" title="Remove">✕</button>
+    </div>`;
+  }).join('');
+  renderImageStrip();
+  updateImgCountBadge();
+}
+
+function liveThumb(id, val){
+  const thumb = document.getElementById('thumb_' + id);
+  if(!thumb) return;
+  const entry = imageEntries.find(e => e.id === id);
+  if(entry) entry.url = val.trim();
+  thumb.innerHTML = val
+    ? `<img src="${val}" onerror="this.parentElement.innerHTML='🖼️'" alt=""/>`
+    : '🖼️';
+  renderImageStrip();
+  updateImgCountBadge();
+}
+
+function renderImageStrip(){
+  const strip = document.getElementById('imgStrip');
+  strip.innerHTML = imageEntries.filter(e => e.url).map(e => `
+    <div class="img-strip-thumb">
+      <img src="${e.url}" onerror="this.style.display='none'" alt=""/>
+      ${e.isFile ? '<span class="file-tag">📁</span>' : ''}
+    </div>`
+  ).join('');
+}
+
+function updateImgCountBadge(){
+  const valid = imageEntries.filter(e => e.url).length;
+  const files = imageEntries.filter(e => e.isFile && e.url).length;
+  const urls  = valid - files;
+  let txt = '';
+  if(valid > 0){
+    const parts = [];
+    if(files) parts.push(`${files} file${files>1?'s':''}`);
+    if(urls)  parts.push(`${urls} URL${urls>1?'s':''}`);
+    txt = parts.join(' + ') + ` · ${valid} total`;
+  }
+  document.getElementById('imgCountBadge').textContent = txt;
+}
+
+function updateSizeMeter(){
+  const totalKB = imageEntries.filter(e=>e.isFile).reduce((s,e)=>s+e.sizeKB,0);
+  const meter   = document.getElementById('imgSizeMeter');
+  const bar     = document.getElementById('sizeBar');
+  const label   = document.getElementById('sizeLabel');
+
+  if(totalKB === 0){ meter.style.display='none'; return; }
+  meter.style.display = 'flex';
+
+  const pct = Math.min(100, Math.round(totalKB / MAX_TOTAL_KB * 100));
+  bar.style.width    = pct + '%';
+  bar.style.background = pct > 85 ? 'var(--danger)' : pct > 60 ? 'var(--warn)' : 'var(--success)';
+  label.textContent  = totalKB + 'KB / ' + MAX_TOTAL_KB + 'KB';
+  label.style.color  = pct > 85 ? 'var(--danger)' : pct > 60 ? 'var(--warn)' : 'var(--muted)';
+}
+
+function getImages(){
+  return imageEntries.map(e => e.url).filter(Boolean);
+}
+
+function getTotalFileSizeKB(){
+  return imageEntries.filter(e=>e.isFile).reduce((s,e)=>s+e.sizeKB, 0);
+}
+
+// ── COLOR MANAGEMENT ──
+let colors = []; // [{name, hex}]
+
+function addColor() {
+  const hex = document.getElementById('colorPicker').value;
+  const name = document.getElementById('colorName').value.trim();
+  if (!name) { toast('Color නම ඇතුළත් කරන්න!', 'error'); return; }
+  if (colors.find(c => c.name.toLowerCase() === name.toLowerCase())) {
+    toast('මේ Color දැනටමත් add කළා!', 'error'); return;
+  }
+  colors.push({ name, hex });
+  document.getElementById('colorName').value = '';
+  renderColorChips();
+}
+
+function removeColor(idx) {
+  colors.splice(idx, 1);
+  renderColorChips();
+}
+
+function renderColorChips() {
+  const container = document.getElementById('colorChips');
+  container.innerHTML = colors.map((c, i) => `
+    <div class="color-chip">
+      <div class="chip-dot" style="background:${c.hex}"></div>
+      <span class="chip-name">${c.name}</span>
+      <button class="chip-rm" onclick="removeColor(${i})" title="Remove">✕</button>
+    </div>
+  `).join('');
+}
+
+// ── FIREBASE ──
 function setStatus(ok) {
   document.getElementById('sDot').className = 'sdot ' + (ok ? 'live' : 'dead');
   document.getElementById('sText').textContent = ok ? 'Live' : 'Offline';
 }
 
-// Real-time listener
 db.collection("products").orderBy("time","desc").onSnapshot(snap => {
   allProducts = [];
   snap.forEach(d => allProducts.push({ id: d.id, ...d.data() }));
@@ -248,17 +612,22 @@ function renderList() {
     const bCls = ss === 'out' ? 'out' : ss === 'low' ? 'low' : 'in';
     const bTxt = ss === 'out' ? 'Out of Stock' : ss === 'low' ? 'Low Stock' : 'In Stock';
     const img = p.images && p.images[0];
+    const colorDots = (p.colors||[]).slice(0,5).map(c =>
+      `<div class="prow-colordot" style="background:${c.hex}" title="${c.name}"></div>`
+    ).join('');
     const safeName = p.name.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    const imgCount = (p.images||[]).length;
     return `
     <div class="prow ${ss==='out'?'oos':''}">
       <div class="prow-thumb">
         ${img ? `<img src="${img}" alt="" onerror="this.parentElement.innerHTML='📦'">` : '📦'}
       </div>
       <div class="prow-info">
-        <div class="prow-name">${p.name}</div>
+        <div class="prow-name">${p.name}${imgCount>1?` <span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace">+${imgCount} imgs</span>`:''}</div>
         <div class="prow-meta">
           <span class="prow-cat">${p.category||'Uncategorized'} · ${sc}</span>
           <span class="sbadge ${bCls}">${bTxt}</span>
+          ${colorDots ? `<div class="prow-colors">${colorDots}</div>` : ''}
         </div>
       </div>
       <div class="prow-price">රු ${Number(p.price).toLocaleString()}</div>
@@ -272,18 +641,24 @@ function renderList() {
 
 function filterList(q) { searchQ = q; renderList(); }
 
-// SUBMIT (add or update)
+// ── SUBMIT ──
 async function submitForm() {
   const name  = document.getElementById('pName').value.trim();
   const price = Number(document.getElementById('pPrice').value);
   const cat   = document.getElementById('pCategory').value.trim();
   const stockVal = document.getElementById('pStock').value;
   const ss    = document.getElementById('pStockStatus').value;
-  const img   = document.getElementById('pImg').value.trim();
   const desc  = document.getElementById('pDesc').value.trim();
+  const images = getImages();
 
-  if (!name)        { toast('Product නම ඇතුළත් කරන්න!', 'error'); return; }
+  if (!name)         { toast('Product නම ඇතුළත් කරන්න!', 'error'); return; }
   if (!price||price<=0) { toast('වලංගු මිලක් ඇතුළත් කරන්න!', 'error'); return; }
+
+  // Size guard — prevent Firestore doc > 1MB
+  const totalKB = getTotalFileSizeKB();
+  if(totalKB > MAX_TOTAL_KB){
+    toast(`⚠️ Images too large (${totalKB}KB). ${MAX_TOTAL_KB}KB limit ඉක්මවා ඇත!`, 'error'); return;
+  }
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
@@ -293,7 +668,8 @@ async function submitForm() {
     name, price, category: cat,
     stock: stockVal !== '' ? Number(stockVal) : null,
     stockStatus: ss,
-    images: img ? [img] : [],
+    images,
+    colors,
     desc,
   };
 
@@ -314,7 +690,7 @@ async function submitForm() {
   }
 }
 
-// EDIT — load product into form
+// ── EDIT ──
 function startEdit(id) {
   const p = allProducts.find(x => x.id === id);
   if (!p) return;
@@ -325,11 +701,25 @@ function startEdit(id) {
   document.getElementById('pCategory').value = p.category || '';
   document.getElementById('pStock').value    = p.stock != null ? p.stock : '';
   document.getElementById('pStockStatus').value = p.stockStatus || 'in';
-  document.getElementById('pImg').value      = (p.images && p.images[0]) || '';
   document.getElementById('pDesc').value     = p.desc || '';
-  previewImg((p.images && p.images[0]) || '');
 
-  // Switch badge & button to EDIT mode
+  // Load images — URLs only (base64 files from edit are displayed read-only via URL)
+  imageEntries = [];
+  imgIdCounter = 0;
+  (p.images || []).forEach(url => {
+    const id = 'img_' + (++imgIdCounter);
+    // Detect base64 (file-uploaded) vs external URL
+    const isBase64 = url.startsWith('data:');
+    const sizeKB = isBase64 ? Math.round((url.length * 3) / 4 / 1024) : 0;
+    imageEntries.push({ id, url, isFile: isBase64, filename: isBase64 ? '(uploaded file)' : '', sizeKB });
+  });
+  renderImageList();
+  updateSizeMeter();
+
+  // Load colors
+  colors = JSON.parse(JSON.stringify(p.colors || []));
+  renderColorChips();
+
   const badge = document.getElementById('modeBadge');
   badge.textContent  = '✎ EDIT MODE';
   badge.className    = 'form-mode-badge edit';
@@ -342,12 +732,21 @@ function startEdit(id) {
   document.getElementById('formCard').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-// RESET to add mode
+// ── RESET ──
 function resetForm() {
   editingId = null;
-  ['pName','pPrice','pCategory','pStock','pImg','pDesc'].forEach(id => document.getElementById(id).value = '');
+  ['pName','pPrice','pCategory','pStock','pDesc'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('pStockStatus').value = 'in';
-  document.getElementById('imgPrev').innerHTML  = '<span>🖼️ Preview</span>';
+
+  imageEntries = [];
+  imgIdCounter = 0;
+  renderImageList();
+  updateSizeMeter();
+  document.getElementById('fileInput').value = '';
+  document.getElementById('dropZone').classList.add('visible');
+
+  colors = [];
+  renderColorChips();
 
   const badge = document.getElementById('modeBadge');
   badge.textContent  = '✦ ADD MODE';
@@ -359,7 +758,7 @@ function resetForm() {
   document.getElementById('submitBtn').disabled = false;
 }
 
-// DELETE
+// ── DELETE ──
 async function delProduct(id, name) {
   if (!confirm(`"${name}" delete කරන්නද?`)) return;
   if (editingId === id) resetForm();
@@ -369,14 +768,7 @@ async function delProduct(id, name) {
   } catch(e) { toast('Error: ' + e.message, 'error'); }
 }
 
-// IMAGE PREVIEW
-function previewImg(url) {
-  const p = document.getElementById('imgPrev');
-  if (!url) { p.innerHTML = '<span>🖼️ Preview</span>'; return; }
-  p.innerHTML = `<img src="${url}" onerror="this.parentElement.innerHTML='<span>❌ Invalid URL</span>'"/>`;
-}
-
-// TOAST
+// ── TOAST ──
 let _tt;
 function toast(msg, type='success') {
   const el = document.getElementById('toast');
@@ -385,6 +777,9 @@ function toast(msg, type='success') {
   clearTimeout(_tt);
   _tt = setTimeout(() => el.className = 'toast', 3200);
 }
+
+// ── INIT ──
+// Drop zone is shown by default; no blank URL field needed on load
 </script>
 </body>
 </html>
